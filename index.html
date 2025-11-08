@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<script>
+// --- Minimal gatekeeper (24h localStorage token) ---
+(function(){
+  try {
+    var k = 'aiNavSession';
+    var raw = localStorage.getItem(k);
+    var ok = false;
+    if (raw) {
+      try {
+        var o = JSON.parse(raw);
+        if (o && o.issuedAt && (Date.now() - o.issuedAt) <= 24*60*60*1000) ok = true;
+      } catch(e){}
+    }
+    if (!ok) {
+      // Prevent flashing content before redirect
+      document.documentElement.style.display = 'none';
+      location.replace('./login.html');
+    } else {
+      document.documentElement.style.display = '';
+    }
+  } catch(e) {
+    // If storage unavailable, force login
+    document.documentElement.style.display = 'none';
+    location.replace('./login.html');
+  }
+})();
+</script>
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+<meta name="robots" content="noindex,nofollow,noarchive,noimageindex" />
+<meta charset="UTF-8" />
+  <title>店舗マップビューア</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ツール名ヘッダー -->
+  <div id="header">AI-MAP店舗商品管理システム</div>
+
+  <!-- ローディング画面 -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">店舗・フロア情報を読み込み中...</div>
+    </div>
+  </div>
+
+  <div id="controls">
+    <div class="control-row">
+      店舗:
+      <select id="storeSelector">
+        <option value="">店舗選択</option>
+      </select>
+      フロア:
+      <select id="floorSelector">
+        <option value="">フロア選択</option>
+      </select>
+      画像種別:
+      <select id="imageTypeSelect">
+        <option value="map">map</option>
+        <option value="cad">cad</option>
+      </select>
+      <button id="refreshDataBtn" style="margin-left: 10px;">最新情報を取得</button>
+    </div>
+  </div>
+
+  <div id="main">
+    <!-- 左半分：マップ画面 -->
+    <div id="leftSection">
+      <div id="mapContainer"></div>
+      <div id="zoom-controls">
+        <button id="zoomInBtn">ズーム イン</button>
+        <button id="zoomOutBtn">ズーム アウト</button>
+        <button id="resetZoomBtn">リセット</button>
+        <button id="toggleMarkersBtn">棚番号を非表示</button>
+      </div>
+    </div>
+    
+    <!-- 右半分：操作ボタンと商品一覧 -->
+    <div id="rightSection">
+      <!-- 右半分上部：操作ボタン -->
+      <div id="controlsContainer">
+        <div class="search-section">
+          <input type="text" id="shelfSearchInput" placeholder="棚番号で検索 (例: 113)">
+          <button id="searchBtn">検索</button>
+          <button id="showAllMarkersBtn">全表示</button>
+        </div>
+        <div class="action-buttons">
+          <button id="addProductBtn" class="add-btn">商品を追加</button>
+          <button id="selectAllBtn" class="select-all-btn" disabled>全て選択</button>
+          <button id="clearAllBtn">選択解除</button>
+          <button id="exportBtn">選択した商品をCSVで出力</button>
+          <button id="deleteSelectedBtn" class="danger-btn">選択商品を削除</button>
+        </div>
+      </div>
+      
+      <!-- 右半分下部：商品一覧 -->
+      <div id="productListContainer">
+        <div id="imageContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 商品追加モーダル -->
+  <div id="productAdditionModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeProductAdditionModal()">&times;</span>
+      <h2>商品追加</h2>
+      <div id="modalShelfInfo"></div>
+      
+      <div class="input-method-selection">
+        <label>入力方法:</label>
+        <input type="radio" id="methodHandy" name="inputMethod" value="handy" checked>
+        <label for="methodHandy">csv取り込み（スキャンチェックリスト）</label>
+        <input type="radio" id="methodManual" name="inputMethod" value="manual">
+        <label for="methodManual">JAN手入力</label>
+      </div>
+      
+      <div id="handyTerminalInput" class="input-section">
+        <h3>csv取り込み</h3>
+        <input type="file" id="handyCSVFile" accept=".csv" style="display: none;">
+        <button id="importCSVBtn">取り込む</button>
+      </div>
+      
+      <div id="manualInput" class="input-section" style="display: none;">
+        <h3>手動入力（13桁未満のJANは、頭に０を付けて13桁にしてください）</h3>
+        <div>
+          <label for="manualJAN">JANコード:</label>
+          <input type="text" id="manualJAN" placeholder="13桁の数字 (例: 0000000000001)" pattern="\d{13}" maxlength="13" title="13桁の数字で入力してください">
+          <button id="addManualJANBtn">追加</button>
+        </div>
+      </div>
+      
+      <div id="additionList">
+        <h3>追加予定商品リスト</h3>
+        <ul id="additionListItems"></ul>
+        <button id="registerProductsBtn" style="margin-top: 10px;">商品登録</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="viewer_core.js"></script>
+<script>
+// Register a minimal Service Worker to discourage browser caching
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js').catch(function(e){ /* noop */ });
+  });
+}
+</script>
+</body>
+</html>

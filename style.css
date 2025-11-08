@@ -1,0 +1,793 @@
+/* 全体 */
+html, body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+#header {
+  flex: 0 0 auto;
+  padding: 10px;
+  background: #f0f0f0;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+}
+#controls {
+  flex: 0 0 auto;
+  padding: 10px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+/* コントロール行のレイアウト */
+.control-row {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.control-row select, .control-row input[type="file"], .control-row button {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  min-height: 0;
+}
+
+/* 左半分：マップ画面 */
+#leftSection {
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  position: relative;
+}
+
+#mapContainer {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+  background: #f5f5f5;
+  cursor: grab;
+}
+
+/* 右半分：操作ボタンと商品一覧 */
+#rightSection {
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-left: 1px solid #ddd;
+}
+
+#mapContainer.dragging {
+  cursor: grabbing;
+}
+
+#mapContainer .map-viewport {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+#mapContainer .map-content {
+  transform-origin: 0 0;
+  transition: transform 0.1s ease-out;
+  position: relative;
+}
+
+#mapContainer img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+}
+
+/* 右半分上部：操作ボタン */
+#controlsContainer {
+  flex: 0 0 auto;
+  padding: 15px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+/* 右半分下部：商品一覧 */
+#productListContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  background: #fff;
+  overflow-y: auto;
+  min-height: 0;
+}
+/* アクションボタンのスタイル */
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 6px;
+  margin-bottom: 15px;
+  overflow-x: auto;
+  min-height: 40px;
+}
+
+.action-buttons button {
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+.action-buttons button:hover {
+  background: #f0f0f0;
+}
+
+.danger-btn {
+  background: #ff4444 !important;
+  color: white !important;
+  border-color: #ff4444 !important;
+}
+
+.danger-btn:hover {
+  background: #ff6666 !important;
+}
+
+.add-btn {
+  background: #4CAF50 !important;
+  color: white !important;
+  border-color: #4CAF50 !important;
+}
+
+.add-btn:hover {
+  background: #45a049 !important;
+}
+
+.add-btn:disabled {
+  background: #cccccc !important;
+  color: #666666 !important;
+  border-color: #cccccc !important;
+  cursor: not-allowed !important;
+}
+
+.add-btn:disabled:hover {
+  background: #cccccc !important;
+}
+
+/* ズームコントロール - 左下に小さく配置 */
+#zoom-controls {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  gap: 3px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  padding: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#zoom-controls button {
+  padding: 4px 8px;
+  font-size: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #fff;
+  transition: background-color 0.2s;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+#zoom-controls button:hover {
+  background: #f0f0f0;
+}
+
+/* 検索セクション */
+.search-section {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.search-section input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.search-section button {
+  padding: 6px 12px;
+  font-size: 12px;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+#searchBtn {
+  background-color: #007bff !important;
+  color: white !important;
+  border-color: #007bff !important;
+}
+
+#searchBtn:hover {
+  background-color: #0056b3 !important;
+}
+
+#showAllMarkersBtn {
+  background-color: #6c757d !important;
+  color: white !important;
+  border-color: #6c757d !important;
+}
+
+#showAllMarkersBtn:hover {
+  background-color: #545b62 !important;
+}
+
+/* 商品一覧内のサムネイル */
+#imageContainer {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  gap: 10px;
+  padding: 15px;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 10px;
+  min-height: 0;
+}
+/* １行目：指示文 */
+.thumbnail-instruction {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.select-all-btn {
+  background-color: #007bff !important;
+  color: white !important;
+  border-color: #007bff !important;
+}
+
+.select-all-btn:hover {
+  background-color: #0056b3 !important;
+  border-color: #0056b3 !important;
+}
+
+.select-all-btn:disabled {
+  background-color: #6c757d !important;
+  color: white !important;
+  border-color: #6c757d !important;
+  cursor: not-allowed !important;
+}
+
+.select-all-btn:disabled:hover {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+}
+/* ２行目：選択中番号 */
+#selectedMarkerDisplay {
+  font-size: 14px;
+  color: red;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+/* 3行目：カテゴリ別品数表示 */
+.category-count-display {
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+.category-count-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #495057;
+  margin-bottom: 4px;
+}
+
+.category-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-count-button {
+  font-size: 11px;
+  color: #495057;
+  background-color: white;
+  padding: 4px 8px;
+  border-radius: 3px;
+  border: 1px solid #007bff;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0;
+}
+
+.category-count-button:hover {
+  background-color: #007bff;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+.category-count-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 123, 255, 0.3);
+}
+
+/* カテゴリボタンの選択状態 */
+.category-count-button.category-selected {
+  background-color: #28a745 !important;
+  color: white !important;
+  border-color: #28a745 !important;
+}
+
+.category-count-button.category-selected:hover {
+  background-color: #218838 !important;
+  border-color: #1e7e34 !important;
+}
+
+/* カテゴリボタンの部分選択状態 */
+.category-count-button.category-partial {
+  background-color: #ffc107 !important;
+  color: #212529 !important;
+  border-color: #ffc107 !important;
+}
+
+.category-count-button.category-partial:hover {
+  background-color: #e0a800 !important;
+  border-color: #d39e00 !important;
+}
+/* ４行目：横並びのサムネリスト */
+.thumb-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+.thumb-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 140px;
+  min-width: 140px;
+  max-width: 140px;
+  height: 200px;
+  text-align: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-bottom: 15px;
+}
+.thumb-box img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.jan-label {
+  font-size: 12px;
+  margin-top: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.2em;
+}
+
+/* マーカー基本スタイル */
+.marker {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6px;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid #333;
+  font-weight: bold;
+  transition: all 0.15s ease;
+  z-index: 10;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.5px;
+}
+
+.marker:hover {
+  transform: scale(2.0);
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+  border-color: #FFD700 !important;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+/* ズームレベル別のホバー効果調整 */
+.marker.zoom-xlarge:hover {
+  transform: scale(1.8);
+}
+
+.marker.zoom-large:hover {
+  transform: scale(2.0);
+}
+
+.marker.zoom-medium:hover {
+  transform: scale(2.2);
+}
+
+.marker.zoom-small:hover {
+  transform: scale(2.5);
+}
+
+.marker.zoom-xsmall:hover {
+  transform: scale(3.0);
+}
+
+/* ズームレベルに応じたマーカーサイズ調整（高解像度対応） */
+.marker.zoom-xlarge {
+  width: 10px;
+  height: 10px;
+  font-size: 8px;
+  border-width: 1px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.marker.zoom-large {
+  width: 7px;
+  height: 7px;
+  font-size: 6px;
+  border-width: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  font-weight: bold;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.marker.zoom-medium {
+  width: 5px;
+  height: 5px;
+  font-size: 4px;
+  border-width: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.marker.zoom-small {
+  width: 4px;
+  height: 4px;
+  font-size: 3px;
+  border-width: 1px;
+  font-weight: bold;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.marker.zoom-xsmall {
+  width: 4px;
+  height: 4px;
+  font-size: 3px;
+  border-width: 1px;
+  font-weight: bold;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 検索時のハイライト */
+.marker.highlighted {
+  animation: pulse 1.5s infinite;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 1.0);
+  border-color: #FFD700 !important;
+  border-width: 4px !important;
+  background-color: #FFD700 !important;
+  color: #000 !important;
+  z-index: 1000 !important;
+  transform: scale(1.4);
+  font-weight: 900;
+}
+
+.marker.highlighted:hover {
+  transform: scale(1.5);
+}
+
+@keyframes pulse {
+  0% { 
+    transform: scale(1.4);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 1.0);
+  }
+  50% { 
+    transform: scale(1.6);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 1.0);
+  }
+  100% { 
+    transform: scale(1.4);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 1.0);
+  }
+}
+
+/* 商品がない棚（空の棚）は赤色 */
+.marker-empty {
+  background: #ff4444;
+}
+
+/* 商品がある棚は青色 */
+.marker-with-products {
+  background: #4444ff;
+}
+
+/* モーダル */
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  right: 15px;
+  top: 10px;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+}
+
+.input-method-selection {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.input-method-selection label {
+  margin-right: 10px;
+}
+
+.input-method-selection input[type="radio"] {
+  margin-right: 5px;
+}
+
+.input-section {
+  margin: 15px 0;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fafafa;
+}
+
+.input-section h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+#additionList {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f0f8ff;
+  display: flex;
+  flex-direction: column;
+  max-height: 300px;
+}
+
+#additionList h3 {
+  margin: 0 0 10px 0;
+  flex-shrink: 0;
+}
+
+#additionListItems {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  flex-grow: 1;
+  max-height: 200px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background-color: white;
+  padding: 10px;
+}
+
+#additionListItems li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#additionListItems li:last-child {
+  border-bottom: none;
+}
+
+#registerProductsBtn {
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+
+.add-product-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* thumb-boxと同じサイズに統一 */
+  width: 140px !important;
+  min-width: 140px !important;
+  max-width: 140px !important;
+  height: 200px !important;
+  flex-shrink: 0 !important;
+  margin-bottom: 15px;
+}
+
+button {
+  padding: 8px 16px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #e9e9e9;
+}
+
+#registerProductsBtn {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #45a049;
+}
+
+#registerProductsBtn:hover {
+  background-color: #45a049;
+}
+
+/* ローディング画面 */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4CAF50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+.loading-text {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ローディング中は他の要素を無効化 */
+.loading-active {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* マップメッセージ */
+.map-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+}
+
+.map-message-content {
+  text-align: center;
+  font-size: 16px;
+  color: #868e96;
+  font-weight: normal;
+  padding: 10px;
+  background: transparent;
+}
