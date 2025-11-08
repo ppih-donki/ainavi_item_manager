@@ -1720,7 +1720,7 @@ function displayRegistrationResult(result) {
   alert(message);
 
   // 結果をCSVで保存
-  saveRegistrationResultToCSV(result);
+  // saveRegistrationResultToCSV(result);
 }
 
 // 登録結果をCSVで保存
