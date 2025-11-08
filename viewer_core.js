@@ -1272,8 +1272,8 @@ function showProductAdditionModal(shelf_id) {
   updateAdditionList();
 
   // ラジオボタンの初期設定
-  document.getElementById("methodHandy").checked = true;
-  toggleInputMethod();
+  document.getElementById("methodManual").checked = true;
+　toggleInputMethod();
 
   modal.style.display = "block";
 
