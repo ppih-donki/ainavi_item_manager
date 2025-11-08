@@ -1,0 +1,1 @@
+# ainavi_item_manager
