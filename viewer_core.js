@@ -1288,7 +1288,7 @@ function closeProductAdditionModal() {
   productAdditionList = [];
 }
 
-// モーダル内のイベントリスナー設定（最小修正をこの関数の中だけに追加）
+// モーダル内のイベントリスナー設定
 function setupModalEventListeners(shelf_id) {
   // 既存のリスナーを削除
   const importBtn = document.getElementById("importCSVBtn");
@@ -1310,27 +1310,9 @@ function setupModalEventListeners(shelf_id) {
   handyRadio.onchange = toggleInputMethod;
   manualRadio.onchange = toggleInputMethod;
 
-  // Enterキーでの追加（既存）
-  const manualInputEl = document.getElementById("manualJAN");
-  manualInputEl.onkeypress = (e) => {
+  // Enterキーでの追加
+  document.getElementById("manualJAN").onkeypress = (e) => {
     if (e.key === 'Enter') handleManualJANAdd(shelf_id);
-  };
-
-  // ▼ iPad対策（最小）: Enterが来なくても自動確定（120msアイドル）＋Tabでも確定
-  let scanTimer = null;
-  manualInputEl.oninput = () => {
-    if (scanTimer) clearTimeout(scanTimer);
-    scanTimer = setTimeout(() => {
-      if (manualInputEl.value && manualInputEl.value.length === 13) {
-        handleManualJANAdd(shelf_id);
-      }
-    }, 120);
-  };
-  manualInputEl.onkeydown = (e) => {
-    if (e.key === "Tab") {
-      e.preventDefault(); // 必要に応じて
-      handleManualJANAdd(shelf_id);
-    }
   };
 }
 
