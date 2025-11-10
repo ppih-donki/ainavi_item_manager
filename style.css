@@ -177,11 +177,11 @@ html, body {
   background: #cccccc !important;
 }
 
-/* ズームコントロール - 左下に小さく配置 */
+/* ✅ ズームコントロール（下 → 上へ移動） */
 #zoom-controls {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  top: 10px;      /* ← ここだけ変更 */
+  left: 10px;     /* ← 左寄せはそのまま */
   display: flex;
   gap: 3px;
   z-index: 100;
@@ -391,6 +391,23 @@ html, body {
   min-width: 140px;
   max-width: 140px;
   height: 200px;
+  text-align
+/* ４行目：横並びのサムネリスト */
+.thumb-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+.thumb-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 140px;
+  min-width: 140px;
+  max-width: 140px;
+  height: 200px;
   text-align: center;
   cursor: pointer;
   flex-shrink: 0;
@@ -430,10 +447,6 @@ html, body {
   z-index: 10;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   letter-spacing: -0.5px;
 }
 
@@ -443,90 +456,22 @@ html, body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
   border-color: #FFD700 !important;
   transition: all 0.15s ease-in-out;
-  cursor: pointer;
 }
 
-/* ズームレベル別のホバー効果調整 */
-.marker.zoom-xlarge:hover {
-  transform: scale(1.8);
-}
+/* ズームレベル別 */
+.marker.zoom-xlarge { width: 10px; height: 10px; font-size: 8px; }
+.marker.zoom-large { width: 7px; height: 7px; font-size: 6px; }
+.marker.zoom-medium { width: 5px; height: 5px; font-size: 4px; }
+.marker.zoom-small { width: 4px; height: 4px; font-size: 3px; }
+.marker.zoom-xsmall { width: 4px; height: 4px; font-size: 3px; }
 
-.marker.zoom-large:hover {
-  transform: scale(2.0);
-}
+/* 商品がない棚（空の棚）は赤色 */
+.marker-empty { background: #ff4444; }
 
-.marker.zoom-medium:hover {
-  transform: scale(2.2);
-}
+/* 商品がある棚は青色 */
+.marker-with-products { background: #4444ff; }
 
-.marker.zoom-small:hover {
-  transform: scale(2.5);
-}
-
-.marker.zoom-xsmall:hover {
-  transform: scale(3.0);
-}
-
-/* ズームレベルに応じたマーカーサイズ調整（高解像度対応） */
-.marker.zoom-xlarge {
-  width: 10px;
-  height: 10px;
-  font-size: 8px;
-  border-width: 1px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  font-weight: bold;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.marker.zoom-large {
-  width: 7px;
-  height: 7px;
-  font-size: 6px;
-  border-width: 1px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-  font-weight: bold;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.marker.zoom-medium {
-  width: 5px;
-  height: 5px;
-  font-size: 4px;
-  border-width: 1px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  font-weight: bold;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.marker.zoom-small {
-  width: 4px;
-  height: 4px;
-  font-size: 3px;
-  border-width: 1px;
-  font-weight: bold;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.marker.zoom-xsmall {
-  width: 4px;
-  height: 4px;
-  font-size: 3px;
-  border-width: 1px;
-  font-weight: bold;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* 検索時のハイライト */
+/* 検索ハイライト */
 .marker.highlighted {
   animation: pulse 1.5s infinite;
   box-shadow: 0 0 20px rgba(255, 215, 0, 1.0);
@@ -536,36 +481,11 @@ html, body {
   color: #000 !important;
   z-index: 1000 !important;
   transform: scale(1.4);
-  font-weight: 900;
 }
-
-.marker.highlighted:hover {
-  transform: scale(1.5);
-}
-
 @keyframes pulse {
-  0% { 
-    transform: scale(1.4);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 1.0);
-  }
-  50% { 
-    transform: scale(1.6);
-    box-shadow: 0 0 30px rgba(255, 215, 0, 1.0);
-  }
-  100% { 
-    transform: scale(1.4);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 1.0);
-  }
-}
-
-/* 商品がない棚（空の棚）は赤色 */
-.marker-empty {
-  background: #ff4444;
-}
-
-/* 商品がある棚は青色 */
-.marker-with-products {
-  background: #4444ff;
+  0% { transform: scale(1.4); }
+  50% { transform: scale(1.6); }
+  100% { transform: scale(1.4); }
 }
 
 /* モーダル */
@@ -601,25 +521,12 @@ html, body {
   top: 10px;
 }
 
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-}
-
+/* 入力セクション */
 .input-method-selection {
   margin: 15px 0;
   padding: 10px;
   background-color: #f9f9f9;
   border-radius: 5px;
-}
-
-.input-method-selection label {
-  margin-right: 10px;
-}
-
-.input-method-selection input[type="radio"] {
-  margin-right: 5px;
 }
 
 .input-section {
@@ -630,11 +537,7 @@ html, body {
   background-color: #fafafa;
 }
 
-.input-section h3 {
-  margin-top: 0;
-  color: #333;
-}
-
+/* 登録リスト */
 #additionList {
   margin-top: 20px;
   padding: 15px;
@@ -646,79 +549,18 @@ html, body {
   max-height: 300px;
 }
 
-#additionList h3 {
-  margin: 0 0 10px 0;
-  flex-shrink: 0;
-}
-
 #additionListItems {
   list-style: none;
-  padding: 0;
+  padding: 10px;
   margin: 0;
   overflow-y: auto;
   flex-grow: 1;
-  max-height: 200px;
   border: 1px solid #ddd;
   border-radius: 3px;
   background-color: white;
-  padding: 10px;
 }
 
-#additionListItems li {
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#additionListItems li:last-child {
-  border-bottom: none;
-}
-
-#registerProductsBtn {
-  margin-top: 10px;
-  flex-shrink: 0;
-}
-
-.add-product-box {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  /* thumb-boxと同じサイズに統一 */
-  width: 140px !important;
-  min-width: 140px !important;
-  max-width: 140px !important;
-  height: 200px !important;
-  flex-shrink: 0 !important;
-  margin-bottom: 15px;
-}
-
-button {
-  padding: 8px 16px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f9f9f9;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #e9e9e9;
-}
-
-#registerProductsBtn {
-  background-color: #4CAF50;
-  color: white;
-  border: 1px solid #45a049;
-}
-
-#registerProductsBtn:hover {
-  background-color: #45a049;
-}
-
-/* ローディング画面 */
+/* ローディング */
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -730,18 +572,6 @@ button:hover {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  backdrop-filter: blur(2px);
-}
-
-.loading-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e0e0e0;
 }
 
 .loading-spinner {
@@ -751,27 +581,13 @@ button:hover {
   border-top: 4px solid #4CAF50;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 15px;
 }
-
-.loading-text {
-  font-size: 16px;
-  color: #333;
-  font-weight: 500;
-}
-
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* ローディング中は他の要素を無効化 */
-.loading-active {
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-/* マップメッセージ */
+/* マップの初期メッセージ */
 .map-message {
   display: flex;
   justify-content: center;
@@ -787,7 +603,4 @@ button:hover {
   text-align: center;
   font-size: 16px;
   color: #868e96;
-  font-weight: normal;
-  padding: 10px;
-  background: transparent;
 }
