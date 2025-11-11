@@ -493,8 +493,20 @@ function setupMapInteractions() {
 
 // ズーム機能
 function zoomMap(factor) {
+  const container = document.getElementById("mapContainer");
+  const rect = container.getBoundingClientRect();
+  const cx = rect.width / 2;
+  const cy = rect.height / 2;
+
+  const imgX = (cx - panX) / zoomLevel;
+  const imgY = (cy - panY) / zoomLevel;
+
   zoomLevel *= factor;
-  zoomLevel = Math.max(0.5, Math.min(5, zoomLevel)); // 0.5倍から5倍まで
+  zoomLevel = Math.max(0.5, Math.min(5, zoomLevel));
+
+  panX = cx - imgX * zoomLevel;
+  panY = cy - imgY * zoomLevel;
+
   updateMapTransform();
 }
 
