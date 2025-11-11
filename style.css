@@ -180,7 +180,7 @@ html, body {
 /* ズームコントロール - 左下に小さく配置 */
 #zoom-controls {
   position: absolute;
-  bottom: 10px;
+  top: 10px;
   left: 10px;
   display: flex;
   gap: 3px;
