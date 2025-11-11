@@ -605,15 +605,15 @@ function updateMarkerPosition(marker) {
 // 現在のズームレベルに応じたマーカーサイズを返す
 function getMarkerSize() {
   if (zoomLevel >= 3.5) {
-    return 8; // zoom-xsmall
+    return 1; // zoom-xsmall
   } else if (zoomLevel >= 2.5) {
-    return 10; // zoom-small
+    return 3; // zoom-small
   } else if (zoomLevel >= 1.5) {
-    return 12; // zoom-medium
+    return 5; // zoom-medium
   } else if (zoomLevel >= 1.0) {
-    return 14; // zoom-large
+    return 7; // zoom-large
   } else {
-    return 16; // zoom-xlarge
+    return 9; // zoom-xlarge
   }
 }
 
