@@ -8,8 +8,6 @@
     '373'  : 'Donki373',
     '442'  : 'Donki442',
     '555'  : 'Donki555'
-    '356'  : 'Donki356'
-    '000'  : 'Donki000'
   };
 
   var KEY = 'aiNavSession';
